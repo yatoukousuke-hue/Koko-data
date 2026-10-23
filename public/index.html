@@ -3,113 +3,123 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light only">
 <meta name="robots" content="noindex">
 <meta name="description" content="学校名で検索すると、合格実績・指定校推薦・部活動・応募状況・選抜基準・併願例などをまとめて見られます。">
-<meta name="theme-color" content="#1f3a5f">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231f3a5f'/%3E%3Ccircle cx='28' cy='28' r='13' fill='none' stroke='%23fff' stroke-width='6'/%3E%3Cpath d='M38 38l14 14' stroke='%23fff' stroke-width='7' stroke-linecap='round'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#17325a">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2317325a'/%3E%3Ccircle cx='28' cy='28' r='13' fill='none' stroke='%23fff' stroke-width='6'/%3E%3Cpath d='M38 38l14 14' stroke='%23fff' stroke-width='7' stroke-linecap='round'/%3E%3C/svg%3E">
 <title>高校データ検索</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Shippori+Mincho:wght@600;800&family=IBM+Plex+Mono:wght@500;600&display=swap">
 <style>
-/* Layout: one column, search box pinned at top, school card opens below with tabbed sections */
+/* Light-only design (locked): calm navy on warm paper, generous spacing, one card at a time */
 :root{
-  --bg:#f6f7f9; --card:#ffffff; --fg:#17202b; --muted:#5d6b7c; --line:#d9dfe7;
-  --accent:#1f3a5f; --accent-soft:#e4ebf4; --accent-ink:#ffffff;
-  --warm:#b8551a; --warm-soft:#fbe9dc; --good:#1f6b3a; --good-soft:#dff1e4;
-  --heat1:#e8f0fa; --heat2:#c4d8f0; --chip:#eef1f5;
-  --body:'Noto Sans JP',system-ui,-apple-system,sans-serif; --mono:'IBM Plex Mono','Noto Sans JP',monospace;
+  color-scheme: light only;
+  --paper:#f5f6f8; --card:#ffffff; --ink:#1b2430; --muted:#66717f; --line:#e3e7ec; --line-2:#cfd6de;
+  --navy:#17325a; --navy-2:#24467a; --navy-soft:#e9eff7; --navy-tint:#f3f6fb;
+  --gold:#b8892b; --gold-soft:#fbf3e3;
+  --rose:#b3433f; --rose-soft:#fbe9e8;
+  --heat1:#e7eef9; --heat2:#c9daf2; --chip:#f0f3f7;
+  --body:'Noto Sans JP',system-ui,-apple-system,"Hiragino Sans",sans-serif;
+  --serif:'Shippori Mincho','Hiragino Mincho ProN',serif;
+  --mono:'IBM Plex Mono','Noto Sans JP',monospace;
+  --r:16px; --shadow:0 1px 2px rgba(27,36,48,.05),0 8px 24px -12px rgba(27,36,48,.18);
 }
-@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
-  --bg:#12171f; --card:#1b222c; --fg:#e8edf3; --muted:#9aa8b8; --line:#2d3845;
-  --accent:#9fc0ea; --accent-soft:#243247; --accent-ink:#0f1722;
-  --warm:#f0a070; --warm-soft:#3c2a1e; --good:#8fd4a5; --good-soft:#1f3327;
-  --heat1:#22314a; --heat2:#2f4a72; --chip:#243040; color-scheme:dark } }
-:root[data-theme="dark"]{
-  --bg:#12171f; --card:#1b222c; --fg:#e8edf3; --muted:#9aa8b8; --line:#2d3845;
-  --accent:#9fc0ea; --accent-soft:#243247; --accent-ink:#0f1722;
-  --warm:#f0a070; --warm-soft:#3c2a1e; --good:#8fd4a5; --good-soft:#1f3327;
-  --heat1:#22314a; --heat2:#2f4a72; --chip:#243040; color-scheme:dark }
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.55;
-  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 48px}
-body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
-.wrap{max-width:760px;margin:0 auto}
-header{padding:18px 0 10px}
-h1{font-size:22px;font-weight:900;margin:0;letter-spacing:.01em;text-wrap:balance}
-h1 small{display:block;font-size:12px;font-weight:500;color:var(--muted);margin-top:2px}
-.search{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding:8px 0 10px}
-.search input{width:100%;font:500 17px var(--body);padding:12px 14px;border:1.5px solid var(--line);border-radius:12px;background:var(--card);color:var(--fg);outline:none}
-.search input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
-.hint{font-size:12px;color:var(--muted);margin:6px 2px 0}
-.list{display:flex;flex-direction:column;gap:6px;margin-top:6px}
-.item{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--card);cursor:pointer;text-align:left;font:inherit;color:inherit;width:100%}
-.item:hover,.item:focus-visible{border-color:var(--accent);outline:none}
-.item .nm{font-weight:700}
+html{background:var(--paper)}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 56px;
+  -webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}
+.wrap{max-width:720px;margin:0 auto}
+header{padding:28px 0 14px;text-align:center}
+.eyebrow{font-size:11.5px;letter-spacing:.18em;color:var(--gold);font-weight:700;text-transform:uppercase}
+h1{font-family:var(--serif);font-size:30px;font-weight:800;margin:4px 0 6px;letter-spacing:.04em;color:var(--navy);text-wrap:balance;line-height:1.25}
+.lead{font-size:13px;color:var(--muted);margin:0 auto;line-height:1.7;max-width:30em;text-wrap:balance}
+.search{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--paper);padding:10px 0 8px}
+.sbox{position:relative}
+.sbox svg{position:absolute;left:16px;top:50%;transform:translateY(-50%);width:20px;height:20px;color:var(--muted);pointer-events:none}
+.search input{width:100%;font:500 17px var(--body);padding:15px 16px 15px 46px;border:1.5px solid var(--line-2);border-radius:999px;background:var(--card);color:var(--ink);outline:none;box-shadow:var(--shadow);transition:border-color .15s,box-shadow .15s}
+.search input::placeholder{color:#9aa5b2}
+.search input:focus{border-color:var(--navy-2);box-shadow:0 0 0 4px var(--navy-soft),var(--shadow)}
+.hint{font-size:12.5px;color:var(--muted);margin:8px 6px 0;min-height:1.2em}
+.list{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+.item{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:13px 16px;border:1px solid var(--line);border-radius:var(--r);background:var(--card);cursor:pointer;text-align:left;font:inherit;color:inherit;width:100%;box-shadow:var(--shadow);transition:transform .12s,border-color .12s}
+.item:hover,.item:focus-visible{border-color:var(--navy-2);outline:none;transform:translateY(-1px)}
+.item .nm{font-weight:700;font-size:16px}
 .item .gp{font-size:12px;color:var(--muted);white-space:nowrap}
-.badges{display:flex;gap:4px;flex-wrap:wrap;margin-top:3px}
-.badge{font-size:10.5px;padding:1px 6px;border-radius:999px;background:var(--chip);color:var(--muted);letter-spacing:.02em}
-.card{margin-top:12px;background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
-.card-h{padding:16px 16px 12px;background:var(--accent);color:var(--accent-ink)}
-.card-h h2{margin:0;font-size:22px;font-weight:900}
-.card-h .gp{font-size:12.5px;opacity:.85;margin-top:2px}
-.tabs{display:flex;gap:6px;overflow-x:auto;padding:10px 12px;border-bottom:1px solid var(--line);scrollbar-width:none}
+.badges{display:flex;gap:4px;flex-wrap:wrap;margin-top:5px}
+.badge{font-size:10.5px;padding:2px 8px;border-radius:999px;background:var(--navy-soft);color:var(--navy-2);font-weight:600}
+.card{margin-top:14px;background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:var(--shadow)}
+.card-h{padding:22px 20px 16px;background:linear-gradient(135deg,var(--navy) 0%,var(--navy-2) 100%);color:#fff;position:relative}
+.card-h::after{content:"";position:absolute;right:-30px;top:-40px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,.06)}
+.card-h .kicker{font-size:11px;letter-spacing:.16em;opacity:.75;font-weight:600}
+.card-h h2{margin:2px 0 0;font-family:var(--serif);font-size:28px;font-weight:800;letter-spacing:.03em;line-height:1.25}
+.card-h .gp{display:inline-block;margin-top:8px;font-size:12px;padding:3px 10px;border-radius:999px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22)}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding:12px 14px;border-bottom:1px solid var(--line);scrollbar-width:none;background:var(--navy-tint)}
 .tabs::-webkit-scrollbar{display:none}
-.tab{flex:none;font:600 13px var(--body);padding:7px 12px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--fg);cursor:pointer}
-.tab[aria-selected="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
-.sec{padding:14px 16px 18px}
-.sec h3{font-size:16px;margin:0 0 8px;font-weight:700}
-.note{font-size:12px;color:var(--muted);margin:10px 0 0;line-height:1.5}
-.note p{margin:0 0 3px}
-.tbl-wrap{overflow-x:auto;margin:0 -16px;padding:0 16px}
-table{border-collapse:collapse;font-size:13px;min-width:100%}
-th,td{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
-th{font-size:11.5px;color:var(--muted);font-weight:600;white-space:nowrap;background:var(--chip)}
+.tab{flex:none;font:600 13px var(--body);padding:8px 14px;border-radius:999px;border:1px solid var(--line-2);background:var(--card);color:var(--navy);cursor:pointer;transition:background .12s}
+.tab[aria-selected="true"]{background:var(--navy);color:#fff;border-color:var(--navy)}
+.sec{padding:18px 20px 22px}
+.sec h3{font-family:var(--serif);font-size:18px;margin:0 0 4px;font-weight:800;color:var(--navy);letter-spacing:.02em}
+.sec h3+.intro,.sec h3+.yrs{margin-top:2px}
+.rule{height:2px;width:36px;background:var(--gold);border-radius:2px;margin:6px 0 12px}
+.note{font-size:12px;color:var(--muted);margin:14px 0 0;line-height:1.6;padding-top:10px;border-top:1px dashed var(--line)}
+.note p{margin:0 0 4px}
+.tbl-wrap{overflow-x:auto;margin:0 -20px;padding:0 20px}
+table{border-collapse:collapse;font-size:13.5px;min-width:100%}
+th,td{border-bottom:1px solid var(--line);padding:8px 9px;text-align:left;vertical-align:top}
+th{font-size:11.5px;color:var(--muted);font-weight:600;white-space:nowrap;background:var(--chip);border-bottom:1px solid var(--line-2)}
 td.n,th.n{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px}
-.ucell{display:flex;justify-content:space-between;align-items:baseline;gap:8px;padding:7px 10px;border-radius:8px;background:var(--chip)}
-.ucell.h1{background:var(--heat1)} .ucell.h2{background:var(--heat2)}
-.ucell .u{font-size:13px;font-weight:600;min-width:0;overflow-wrap:anywhere}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(156px,1fr));gap:8px}
+.ucell{display:flex;justify-content:space-between;align-items:baseline;gap:8px;padding:9px 12px;border-radius:12px;background:var(--chip);border:1px solid transparent}
+.ucell.h1{background:var(--heat1);border-color:#d7e3f3} .ucell.h2{background:var(--heat2);border-color:#b7cdea}
+.ucell .u{font-size:13px;font-weight:700;min-width:0;overflow-wrap:anywhere;color:var(--navy)}
 .ucell .v{font-family:var(--mono);font-size:13px;white-space:nowrap}
-.ucell .v b{font-weight:600;color:var(--fg)} .ucell .v span{color:var(--muted);font-size:11.5px}
-.yrs{font-size:11.5px;color:var(--muted);margin:0 0 8px}
-.other{margin-top:12px;padding:10px 12px;border-radius:8px;background:var(--chip);font-size:13px}
-.other b{display:block;font-size:11.5px;color:var(--muted);margin-bottom:2px}
-.shitei{font-size:14px;line-height:1.7}
-.shitei .sl{color:var(--muted);padding:0 3px}
-.shitei b{color:var(--accent);font-weight:700}
-.clubs{display:flex;flex-wrap:wrap;gap:6px}
-.club{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:999px;font-size:13px;background:var(--chip)}
-.club.s3{background:var(--accent-soft);font-weight:700} .club .sy{font-family:var(--mono);font-size:12px}
+.ucell .v b{font-weight:600;color:var(--ink)} .ucell .v span{color:var(--muted);font-size:11.5px}
+.yrs{font-size:12.5px;color:var(--muted);margin:0 0 10px;line-height:1.6}
+.other{margin-top:14px;padding:12px 14px;border-radius:12px;background:var(--navy-tint);border:1px solid var(--line);font-size:13.5px;line-height:1.7}
+.other b{display:block;font-size:11.5px;color:var(--muted);margin-bottom:3px;letter-spacing:.04em}
+.shitei{font-size:14.5px;line-height:1.85}
+.shitei .sl{color:#b3bcc7;padding:0 4px}
+.shitei b{color:var(--navy);font-weight:700}
+.clubs{display:flex;flex-wrap:wrap;gap:7px}
+.club{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:999px;font-size:13.5px;background:var(--chip);border:1px solid var(--line)}
+.club.s3{background:var(--navy-soft);border-color:#c9d7ea;font-weight:700;color:var(--navy)} .club .sy{font-family:var(--mono);font-size:12px}
 .club.s1,.club.s0{color:var(--muted)}
-.legend{font-size:12px;color:var(--muted);margin:8px 0 10px}
-.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:14px}
+.legend{font-size:12.5px;color:var(--muted);margin:6px 0 12px;line-height:1.6}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:14.5px;margin:0}
 .kv dt{color:var(--muted);font-size:12.5px;padding-top:2px} .kv dd{margin:0}
-.rate{display:inline-block;padding:0 6px;border-radius:6px;font-weight:700}
-.rate.r2{background:var(--warm-soft);color:var(--warm)} .rate.r3{background:var(--warm-soft);color:var(--warm);outline:1.5px solid var(--warm)}
-.sen{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:10px}
-.sen h4{margin:0 0 6px;font-size:14px}
-.sen .st{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.sen .stage{background:var(--chip);border-radius:8px;padding:8px 10px;font-size:13px}
-.sen .stage b{display:block;font-size:11.5px;color:var(--muted);margin-bottom:4px}
-.sen .stage .row{display:flex;justify-content:space-between;gap:6px}
+.rate{display:inline-block;padding:1px 7px;border-radius:7px;font-weight:700}
+.rate.r2{background:var(--gold-soft);color:#8a6414} .rate.r3{background:var(--rose-soft);color:var(--rose)}
+.sen{border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:12px;background:var(--card)}
+.sen h4{margin:0 0 8px;font-size:15px;color:var(--navy)}
+.sen h4 span{display:block;color:var(--muted);font-weight:500;font-size:12.5px;margin-top:2px}
+.sen .st{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sen .stage{background:var(--chip);border-radius:12px;padding:10px 12px;font-size:13.5px}
+.sen .stage b{display:block;font-size:11.5px;color:var(--muted);margin-bottom:6px;letter-spacing:.04em}
+.sen .stage .row{display:flex;justify-content:space-between;gap:6px;padding:2px 0}
 .sen .stage .row span:last-child{font-family:var(--mono);white-space:nowrap}
-.sen .tt{font-weight:700} .sen .tk{color:var(--warm)} .sen .ky{color:var(--accent)}
-.hg{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.hg div{background:var(--chip);border-radius:8px;padding:10px 12px}
-.hg b{display:block;font-size:12px;color:var(--muted);margin-bottom:4px}
-.hg ol{margin:0;padding-left:20px;font-size:14px}
-.empty{padding:28px 16px;text-align:center;color:var(--muted)}
-.foot{font-size:11.5px;color:var(--muted);margin:26px 2px 0;line-height:1.5}
+.sen .tt{font-weight:700;border-top:1px solid var(--line-2);margin-top:4px;padding-top:6px} .sen .tk{color:var(--gold);font-weight:700} .sen .ky{color:var(--navy-2);font-weight:700}
+.hg{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.hg div{background:var(--chip);border-radius:14px;padding:12px 14px;border:1px solid var(--line)}
+.hg b{display:block;font-size:12px;color:var(--muted);margin-bottom:6px;letter-spacing:.04em}
+.hg ol{margin:0;padding-left:22px;font-size:14.5px;line-height:1.8}
+.empty{padding:36px 16px;text-align:center;color:var(--muted);background:var(--card);border-radius:var(--r);border:1px dashed var(--line-2)}
+.foot{font-size:12px;color:var(--muted);margin:32px 6px 0;line-height:1.7;text-align:center}
 .tx{font-size:13.5px}
-.intro{font-size:13px;color:var(--muted);margin:0 0 8px}
-@media (max-width:480px){ .sen .st,.hg{grid-template-columns:1fr} }
-@media (prefers-reduced-motion:no-preference){ .card{animation:in .18s ease} @keyframes in{from{opacity:.6;transform:translateY(4px)}to{opacity:1;transform:none}} }
+.intro{font-size:13px;color:var(--muted);margin:0 0 10px;line-height:1.6}
+.warn{display:flex;gap:8px;align-items:flex-start;background:var(--gold-soft);border:1px solid #ecd9ad;color:#6d4f0f;border-radius:12px;padding:10px 12px;font-size:13px;margin:0 0 12px;line-height:1.6}
+.warn svg{flex:none;width:18px;height:18px;margin-top:2px}
+details summary{font-size:13px;cursor:pointer;color:var(--navy-2);font-weight:600;margin-top:10px}
+@media (max-width:480px){ .sen .st,.hg{grid-template-columns:1fr} h1{font-size:26px} .card-h h2{font-size:24px} }
+@media (prefers-reduced-motion:no-preference){ .card{animation:in .22s ease} @keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}} }
 </style>
 <style>[hidden]{display:none!important} img{max-width:100%}</style>
 </head>
 <body>
 <div class="wrap">
-<header><h1>高校データ検索<small>2027年度入試 受験案内 付録「データ＆データ編」より</small></h1></header>
-<div class="search"><input id="q" type="search" placeholder="学校名を入力（例：浦和西、大宮開成）" autocomplete="off" enterkeyhint="search"><div class="hint" id="hint"></div></div>
+<header><div class="eyebrow">Mizutani · School Data</div><h1>高校データ検索</h1><p class="lead">学校名を入れると、合格実績・部活動・入試倍率・選抜基準などを、まとめて確認できます</p></header>
+<div class="search"><div class="sbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="q" type="search" placeholder="学校名を入力（例：浦和西、大宮開成）" autocomplete="off" enterkeyhint="search"></div><div class="hint" id="hint"></div></div>
 <div id="list" class="list"></div>
 <div id="card"></div>
 <div class="foot" id="foot"></div>
@@ -125,7 +135,9 @@ const norm=s=>String(s||'').normalize('NFKC').replace(/[\s　()（）・]/g,'').
   .replace(/[ァ-ヶ]/g,c=>String.fromCharCode(c.charCodeAt(0)-0x60));
 S.forEach(s=>{s._n=[s.name,...s.aliases].map(norm);});
 const q=document.getElementById('q'),list=document.getElementById('list'),card=document.getElementById('card'),hint=document.getElementById('hint');
-document.getElementById('foot').innerHTML='<p>出典：2027年度入試 受験案内 付録「データ＆データ編」。数値・名称・表記は原本のとおりです。空欄は原本で調査できていない項目で、0とは限りません。</p><p>'+e(M.sen_notes[1])+'</p>';
+const WARN='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 2.6 17.2A2 2 0 0 0 4.3 20h15.4a2 2 0 0 0 1.7-2.8L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>';
+const H3=t=>`<h3>${t}</h3><div class="rule"></div>`;
+document.getElementById('foot').innerHTML='<p>出典：2027年度入試 受験案内 付録「データ＆データ編」。数値・名称・表記は原本のとおりです。<br>空欄は原本で調査できていない項目で、0とは限りません。</p><p>'+e(M.sen_notes[1])+'</p>';
 function search(v){
   const n=norm(v); card.innerHTML='';
   if(!n){list.innerHTML='';hint.textContent=S.length+'校を収録。学校名の一部でも探せます。';return;}
@@ -140,7 +152,7 @@ list.addEventListener('click',ev=>{const b=ev.target.closest('.item');if(!b)retu
 q.addEventListener('input',()=>search(q.value));
 function show(s){
   const secs=ORDER.filter(k=>s.has.includes(k));
-  card.innerHTML=`<div class="card"><div class="card-h"><h2>${e(s.name)}</h2><div class="gp">${e(s.group)}</div></div>
+  card.innerHTML=`<div class="card"><div class="card-h"><div class="kicker">SCHOOL</div><h2>${e(s.name)}</h2><div class="gp">${e(s.group)}</div></div>
   <div class="tabs" role="tablist">${secs.map((k,i)=>`<button class="tab" role="tab" aria-selected="${i===0}" data-k="${k}">${SEC[k]}</button>`).join('')}</div>
   <div class="sec" id="sec"></div></div>`;
   const tabs=card.querySelectorAll('.tab');
@@ -150,22 +162,22 @@ function show(s){
 const R={};
 R.univ=s=>{const u=s.univ;const cells=M.univ_cols.filter(c=>u.vals[c]).map(c=>{const v=u.vals[c];const mx=Math.max(...v.map(x=>parseInt(x)||0));const cls=mx>=50?'h2':mx>=10?'h1':'';
   return `<div class="ucell ${cls}"><span class="u">${e(c)}</span><span class="v"><b>${e(v[0]||'–')}</b> <span>${e(v[1]||'–')} / ${e(v[2]||'–')}</span></span></div>`;}).join('');
-  return `<h3>大学合格者数</h3><p class="yrs">各大学の数字は <b>2026年度</b> ／ 2025年度 / 2024年度（現役・浪人の合計）。「–」は原本で空欄。色付きは10人以上・50人以上。</p>
+  return `${H3('大学合格者数')}<p class="yrs">各大学の数字は <b>2026年度</b> ／ 2025年度 / 2024年度（現役・浪人の合計）。「–」は原本で空欄。色付きは10人以上・50人以上。</p>
   ${cells?`<div class="grid">${cells}</div>`:'<p class="tx">58大学への合格者数は原本に記載がありません。</p>'}
   ${u.other?`<div class="other"><b>その他の大学（2025年度）</b>${e(u.other)}</div>`:''}
   <div class="note">${M.univ_notes.map(n=>`<p>${e(n)}</p>`).join('')}</div>`;};
 R.shitei=s=>{const t=s.shitei.text.split('／').map(x=>{const m=x.match(/^(.+?大(?:学)?)(.*)$/);return m&&m[1].length<=12?`<b>${e(m[1])}</b>${e(m[2])}`:e(x);}).join('<span class="sl">／</span>');
-  return `<h3>指定校推薦のある大学・短大</h3><p class="intro">${e(M.shitei_note)}</p><div class="shitei">${t}</div><div class="note"><p>${e(M.shitei_intro.split('\n')[0])}</p></div>`;};
+  return `${H3('指定校推薦のある大学・短大')}<p class="intro">${e(M.shitei_note)}</p><div class="shitei">${t}</div><div class="note"><p>${e(M.shitei_intro.split('\n')[0])}</p></div>`;};
 R.bukatsu=s=>{const b=s.bukatsu;const SY={'◎':'s3','○':'s2','△':'s1','*':'s0'};
   const cl=Object.entries(b.clubs).map(([n,v])=>`<span class="club ${SY[v]||''}"><span class="sy">${v==='*'?'＊':v}</span>${e(n)}</span>`).join('');
-  return `<h3>部活動</h3><p class="legend">◎ 部員31人以上　○ 10〜30人　△ 9人以下　＊ 部員数不明（活動中）</p><div class="clubs">${cl||'<span class="tx">記載なし</span>'}</div>
-  ${b.other||b.note?`<div class="other"><b>その他の部活動</b>${e(b.other)}${b.note?' <span style="color:var(--accent)">'+e(b.note)+'</span>':''}</div>`:''}<div class="note"><p>${e(M.bukatsu_legend)}</p></div>`;};
+  return `${H3('部活動')}<p class="legend">◎ 部員31人以上　○ 10〜30人　△ 9人以下　＊ 部員数不明（活動中）</p><div class="clubs">${cl||'<span class="tx">記載なし</span>'}</div>
+  ${b.other||b.note?`<div class="other"><b>その他の部活動</b>${e(b.other)}${b.note?' <span style="color:var(--navy-2)">'+e(b.note)+'</span>':''}</div>`:''}<div class="note"><p>${e(M.bukatsu_legend)}</p></div>`;};
 R.oubo=s=>{const rate=v=>{const f=parseFloat(v);const c=f>=1.4?'r3':f>=1.2?'r2':'';return `<span class="rate ${c}">${e(v)}</span>`;};
   const rows=s.oubo.map(r=>`<tr><td>${e(r.course)}<span style="color:var(--muted)"> ${e(r.sex)}</span></td><td class="n">${e(r.boshu)}</td><td class="n">${e(r.kakutei)}</td><td class="n">${rate(r.shigan)}</td><td class="n">${e(r.jyuken)}</td><td class="n">${e(r.goukaku)}</td><td class="n">${rate(r.jissitsu)}</td></tr>`).join('');
   const rows2=s.oubo.map(r=>`<tr><td>${e(r.course)}</td><td class="n">${e(r.teiin)}</td><td class="n">${e(r.tenpen)}</td><td class="n">${e(r.boshu)}</td><td class="n">${e(r.henkoumae)}</td><td class="n">${e(r.kakutei)}</td></tr>`).join('');
-  return `<h3>2026年度 入試応募状況</h3><div class="tbl-wrap"><table><thead><tr><th>学科・コース</th><th class="n">入試募集人員</th><th class="n">確定志願者</th><th class="n">志願倍率</th><th class="n">受検者</th><th class="n">合格者</th><th class="n">実質倍率</th></tr></thead><tbody>${rows}</tbody></table></div>
-  <p class="legend" style="margin-top:10px">倍率の色：1.20以上／1.40以上（枠付き）。「—」は原本の表記のまま。</p>
-  <details><summary style="font-size:13px;cursor:pointer;color:var(--muted)">募集定員・転編入枠・変更前志願者数も見る</summary><div class="tbl-wrap" style="margin-top:8px"><table><thead><tr><th>学科</th><th class="n">募集定員</th><th class="n">転編入枠</th><th class="n">入試募集人員</th><th class="n">変更前志願者</th><th class="n">確定志願者</th></tr></thead><tbody>${rows2}</tbody></table></div></details>`;};
+  return `${H3('2026年度 入試応募状況')}<div class="tbl-wrap"><table><thead><tr><th>学科・コース</th><th class="n">入試募集人員</th><th class="n">確定志願者</th><th class="n">志願倍率</th><th class="n">受検者</th><th class="n">合格者</th><th class="n">実質倍率</th></tr></thead><tbody>${rows}</tbody></table></div>
+  <p class="legend" style="margin-top:10px">倍率の色：<span class="rate r2">1.20以上</span>　<span class="rate r3">1.40以上</span>　「—」は原本の表記のまま。</p>
+  <details><summary>募集定員・転編入枠・変更前志願者数も見る</summary><div class="tbl-wrap" style="margin-top:8px"><table><thead><tr><th>学科</th><th class="n">募集定員</th><th class="n">転編入枠</th><th class="n">入試募集人員</th><th class="n">変更前志願者</th><th class="n">確定志願者</th></tr></thead><tbody>${rows2}</tbody></table></div></details>`;};
 R.senbatsu=s=>{const st=(x,label)=>`<div class="stage"><b>${label}（募集の${e(x.ratio)}%）</b>
   <div class="row"><span>選抜の種類</span><span class="${x.type==='特色'?'tk':'ky'}">${e(x.type)}</span></div>
   <div class="row"><span>学力検査</span><span>${e(x.gakuryoku)}${x.keisha&&x.keisha!=='—'?' <small>('+e(x.keisha)+')</small>':''}</span></div>
@@ -173,19 +185,19 @@ R.senbatsu=s=>{const st=(x,label)=>`<div class="stage"><b>${label}（募集の${
   <div class="row"><span>面接</span><span>${e(x.mensetsu)}</span></div>
   ${x.tokushoku&&x.tokushoku!=='—'?`<div class="row"><span>特色検査</span><span>${e(x.tokushoku)}</span></div>`:''}
   <div class="row tt"><span>合計</span><span>${e(x.total)}</span></div></div>`;
-  const items=s.senbatsu.map(r=>`<div class="sen"><h4>${e(r.course)}<span style="color:var(--muted);font-weight:500;font-size:12.5px">（${e(r.section)}・${e(r.sex)}）　第2志望／外国人特選：${e(r.second)}</span></h4><div class="st">${st(r.s1,'第1段階')}${st(r.s2,'第2段階')}</div></div>`).join('');
-  return `<h3>2027年度 選抜基準の概要</h3><p class="intro" style="color:var(--warm);font-weight:700">${e(M.sen_notes[1])}</p>${items}
+  const items=s.senbatsu.map(r=>`<div class="sen"><h4>${e(r.course)}<span>${e(r.section)}・${e(r.sex)}　／　第2志望／外国人特選：${e(r.second)}</span></h4><div class="st">${st(r.s1,'第1段階')}${st(r.s2,'第2段階')}</div></div>`).join('');
+  return `${H3('2027年度 選抜基準の概要')}<div class="warn">${WARN}<span>${e(M.sen_notes[1])}</span></div>${items}
   <div class="note"><p>${e(M.sen_notes[0])}</p><p>面接の「個」は個人面接、「集」は集団面接。調査書の比は1年:2年:3年。傾斜配点の教科と点は学力検査の括弧内。</p>
   ${M.sen_legend.map(l=>`<p><b>${e(l.label)}</b>　${e(l.text).replace(/\n/g,'<br>')}</p>`).join('')}</div>`;};
 R.heigan=s=>{const h=s.heigan;const L=v=>typeof v==='string'?`<p class="tx" style="color:var(--muted);margin:0">${e(v)}</p>`:v.length?`<ol>${v.map(x=>`<li>${e(x)}</li>`).join('')}</ol>`:'<p class="tx" style="color:var(--muted);margin:0">記載なし</p>';
-  return `<h3>私立高校の併願受験例</h3><p class="intro">通学区：${e(h.area)}</p><div class="hg"><div><b>男子</b>${L(h.male)}</div><div><b>女子</b>${L(h.female)}</div></div><div class="note"><p>${e(M.heigan_intro)}</p>${M.heigan_notes.map(n=>`<p>${e(n)}</p>`).join('')}</div>`;};
+  return `${H3('私立高校の併願受験例')}<p class="intro">通学区：${e(h.area)}</p><div class="hg"><div><b>男子</b>${L(h.male)}</div><div><b>女子</b>${L(h.female)}</div></div><div class="note"><p>${e(M.heigan_intro)}</p>${M.heigan_notes.map(n=>`<p>${e(n)}</p>`).join('')}</div>`;};
 R.taiiku=s=>{const rows=s.taiiku.map(r=>`<tr><td>${e(r.sport)}</td><td>${e(r.sex)}</td><td class="n">${e(r.year)}</td><td><b>${e(r.pos)}</b>${r.team!==s.name&&!s.aliases.includes(r.team)?' <small>('+e(r.team)+')</small>':''}</td></tr>`).join('');
-  return `<h3>学校総合体育大会 県予選会（2023〜2025年度）</h3><div class="tbl-wrap"><table><thead><tr><th>種目</th><th></th><th class="n">年度</th><th>結果</th></tr></thead><tbody>${rows}</tbody></table></div><div class="note">${M.taiiku_notes.map(n=>`<p>${e(n)}</p>`).join('')}<p>${e(M.taiiku_source)}</p></div>`;};
-R.kikoku=s=>{const k=s.kikoku;const o=b=>b?'○':'';
+  return `${H3('学校総合体育大会 県予選会（2023〜2025年度）')}<div class="tbl-wrap"><table><thead><tr><th>種目</th><th></th><th class="n">年度</th><th>結果</th></tr></thead><tbody>${rows}</tbody></table></div><div class="note">${M.taiiku_notes.map(n=>`<p>${e(n)}</p>`).join('')}<p>${e(M.taiiku_source)}</p></div>`;};
+R.kikoku=s=>{const k=s.kikoku;
   const rows=k.exams.map(x=>`<tr><td class="n">${e(x.date)}</td><td>${[x.kikoku?'帰国':'',x.suisen?'推薦':'',x.ippan?'一般':''].filter(Boolean).join('・')}${x.tokubetsu?'<br><small>特別措置あり</small>':''}</td><td>${e(x.subjects)}</td>${x.boshu!==undefined?`<td>${e(x.boshu)}</td>`:''}</tr>`).join('');
   const perB=k.exams.some(x=>x.boshu!==undefined);
-  return `<h3>海外帰国生の受け入れ（2026年度）</h3><dl class="kv"><dt>区分</dt><dd>${e(k.sex)}</dd>${perB?'':`<dt>募集人員</dt><dd>${e(k.boshu)}</dd>`}<dt>問い合わせ</dt><dd>☎ ${e(k.tel)}</dd></dl>
-  <div class="tbl-wrap" style="margin-top:10px"><table><thead><tr><th>試験日</th><th>入試種別</th><th>入試科目</th>${perB?'<th>募集人員</th>':''}</tr></thead><tbody>${rows}</tbody></table></div>
+  return `${H3('海外帰国生の受け入れ（2026年度）')}<dl class="kv"><dt>区分</dt><dd>${e(k.sex)}</dd>${perB?'':`<dt>募集人員</dt><dd>${e(k.boshu)}</dd>`}<dt>問い合わせ</dt><dd>☎ ${e(k.tel)}</dd></dl>
+  <div class="tbl-wrap" style="margin-top:12px"><table><thead><tr><th>試験日</th><th>入試種別</th><th>入試科目</th>${perB?'<th>募集人員</th>':''}</tr></thead><tbody>${rows}</tbody></table></div>
   <div class="note"><p>${e(M.kikoku_header.note1)}</p><p>${e(M.kikoku_header.legend)}</p><p>${e(M.kikoku_header.asof)}</p></div>`;};
 function render(s,k){document.getElementById('sec').innerHTML=R[k](s);}
 search('');
