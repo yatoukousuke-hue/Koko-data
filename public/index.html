@@ -31,7 +31,11 @@ body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);f
   -webkit-font-smoothing:antialiased}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}
 .wrap{max-width:720px;margin:0 auto}
-header{padding:28px 0 14px;text-align:center}
+header{padding:28px 0 14px;text-align:center;transition:padding .15s}
+body.open header{padding:14px 0 6px}
+body.open header .lead,body.open header .eyebrow{display:none}
+body.open h1{font-size:18px;margin:0}
+body.open .hint{display:none}
 .eyebrow{font-size:11.5px;letter-spacing:.18em;color:var(--gold);font-weight:700;text-transform:uppercase}
 h1{font-family:var(--serif);font-size:30px;font-weight:800;margin:4px 0 6px;letter-spacing:.04em;color:var(--navy);text-wrap:balance;line-height:1.25}
 .lead{font-size:13px;color:var(--muted);margin:0 auto;line-height:1.7;max-width:30em;text-wrap:balance}
@@ -100,6 +104,15 @@ td.n,th.n{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-
 .sen .stage .row{display:flex;justify-content:space-between;gap:6px;padding:2px 0}
 .sen .stage .row span:last-child{font-family:var(--mono);white-space:nowrap}
 .sen .tt{font-weight:700;border-top:1px solid var(--line-2);margin-top:4px;padding-top:6px} .sen .tk{color:var(--gold);font-weight:700} .sen .ky{color:var(--navy-2);font-weight:700}
+.ob{display:flex;flex-direction:column;gap:10px}
+.ob .row{border:1px solid var(--line);border-radius:14px;padding:12px 14px;background:var(--card)}
+.ob .row h4{margin:0 0 8px;font-size:15px;color:var(--navy)}
+.ob .row h4 span{color:var(--muted);font-weight:500;font-size:12.5px;margin-left:6px}
+.ob .kv2{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.ob .kv2 div{background:var(--chip);border-radius:10px;padding:7px 8px;text-align:center}
+.ob .kv2 b{display:block;font-size:10.5px;color:var(--muted);font-weight:600;letter-spacing:.02em;margin-bottom:2px}
+.ob .kv2 span{font-family:var(--mono);font-size:15px;font-weight:600}
+.ob .kv2 .big span{font-size:17px}
 .hg{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .hg div{background:var(--chip);border-radius:14px;padding:12px 14px;border:1px solid var(--line)}
 .hg b{display:block;font-size:12px;color:var(--muted);margin-bottom:6px;letter-spacing:.04em}
@@ -123,7 +136,7 @@ td.n,th.n{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-
 .names button{font:500 14px var(--body);padding:9px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer;text-align:left;box-shadow:var(--shadow);min-width:0;overflow-wrap:anywhere}
 .names button:hover,.names button:focus-visible{border-color:var(--navy-2);outline:none}
 .names button small{display:block;font-size:10.5px;color:var(--muted);margin-top:1px}
-.back{display:inline-flex;align-items:center;gap:6px;font:600 13px var(--body);color:var(--navy-2);background:none;border:none;padding:6px 0;cursor:pointer;margin-bottom:4px}
+.back{display:inline-flex;align-items:center;gap:6px;font:600 13px var(--body);color:var(--navy-2);background:var(--card);border:1px solid var(--line);border-radius:999px;padding:7px 14px;cursor:pointer;margin:2px 0 10px;box-shadow:var(--shadow)}
 .basic{display:grid;grid-template-columns:auto 1fr;gap:8px 14px;font-size:14.5px;margin:0}
 .basic dt{color:var(--muted);font-size:12.5px;padding-top:2px} .basic dd{margin:0;overflow-wrap:anywhere}
 .basic a{color:var(--navy-2);font-weight:600}
@@ -190,7 +203,7 @@ subseg.addEventListener('click',ev=>{const b=ev.target.closest('button');if(!b)r
 groups.addEventListener('click',ev=>{const b=ev.target.closest('button[data-i]');if(!b)return;show(S[+b.dataset.i]);});
 /* ---- search ---- */
 function search(v){
-  const n=norm(v); card.innerHTML='';
+  const n=norm(v); card.innerHTML=''; document.body.classList.remove('open');
   if(!n){list.innerHTML='';hint.textContent=S.length+'校を収録。学校名の一部やひらがなでも探せます。下の一覧からも選べます。';browse.hidden=false;drawBrowse();return;}
   browse.hidden=true;
   let hits=S.filter(s=>s._n.some(x=>x.includes(n)));
@@ -203,12 +216,12 @@ function search(v){
 list.addEventListener('click',ev=>{const b=ev.target.closest('.item');if(!b)return;show(S[+b.dataset.i]);});
 q.addEventListener('input',()=>search(q.value));
 function show(s){
-  browse.hidden=true; list.innerHTML='';
+  browse.hidden=true; list.innerHTML=''; document.body.classList.add('open');
   const secs=ORDER.filter(k=>k==='basic'||s.has.includes(k));
   card.innerHTML=`<button class="back" id="back">‹ 一覧にもどる</button><div class="card"><div class="card-h"><div class="kicker">SCHOOL</div><h2>${e(s.name)}</h2><div class="gp">${e(s.group)}${s.area?'　'+e(s.area):''}</div></div>
   <div class="tabs" role="tablist">${secs.map((k,i)=>`<button class="tab" role="tab" aria-selected="${i===0}" data-k="${k}">${SEC[k]}</button>`).join('')}</div>
   <div class="sec" id="sec"></div></div>`;
-  document.getElementById('back').addEventListener('click',()=>{card.innerHTML='';q.value='';search('');window.scrollTo({top:0});});
+  document.getElementById('back').addEventListener('click',()=>{card.innerHTML='';document.body.classList.remove('open');q.value='';search('');window.scrollTo({top:0});});
   const tabs=card.querySelectorAll('.tab');
   tabs.forEach(t=>t.addEventListener('click',()=>{tabs.forEach(x=>x.setAttribute('aria-selected',x===t));render(s,t.dataset.k);}));
   render(s,secs[0]);
@@ -237,14 +250,16 @@ R.univ=s=>{const u=s.univ;const cells=M.univ_cols.filter(c=>u.vals[c]).map(c=>{c
 R.shitei=s=>{const t=s.shitei.text.split('／').map(x=>{const m=x.match(/^(.+?大(?:学)?)(.*)$/);return m&&m[1].length<=12?`<b>${e(m[1])}</b>${e(m[2])}`:e(x);}).join('<span class="sl">／</span>');
   return `${H3('指定校推薦のある大学・短大')}<p class="intro">${e(M.shitei_note)}</p><div class="shitei">${t}</div><div class="note"><p>${e(M.shitei_intro.split('\n')[0])}</p></div>`;};
 R.bukatsu=s=>{const b=s.bukatsu;const SY={'◎':'s3','○':'s2','△':'s1','*':'s0'};
-  const cl=Object.entries(b.clubs).map(([n,v])=>`<span class="club ${SY[v]||''}"><span class="sy">${v==='*'?'＊':v}</span>${e(n)}</span>`).join('');
+  const RANK={'◎':0,'○':1,'△':2,'*':3};const cl=Object.entries(b.clubs).sort((x,y)=>(RANK[x[1]]??9)-(RANK[y[1]]??9)).map(([n,v])=>`<span class="club ${SY[v]||''}"><span class="sy">${v==='*'?'＊':v}</span>${e(n)}</span>`).join('');
   return `${H3('部活動')}<p class="legend">◎ 部員31人以上　○ 10〜30人　△ 9人以下　＊ 部員数不明（活動中）</p><div class="clubs">${cl||'<span class="tx">記載なし</span>'}</div>
   ${b.other||b.note?`<div class="other"><b>その他の部活動</b>${e(b.other)}${b.note?' <span style="color:var(--navy-2)">'+e(b.note)+'</span>':''}</div>`:''}<div class="note"><p>${e(M.bukatsu_legend)}</p></div>`;};
 R.oubo=s=>{const rate=v=>{const f=parseFloat(v);const c=f>=1.4?'r3':f>=1.2?'r2':'';return `<span class="rate ${c}">${e(v)}</span>`;};
-  const rows=s.oubo.map(r=>`<tr><td>${e(r.course)}<span style="color:var(--muted)"> ${e(r.sex)}</span></td><td class="n">${e(r.boshu)}</td><td class="n">${e(r.kakutei)}</td><td class="n">${rate(r.shigan)}</td><td class="n">${e(r.jyuken)}</td><td class="n">${e(r.goukaku)}</td><td class="n">${rate(r.jissitsu)}</td></tr>`).join('');
+  const rows=s.oubo.map(r=>`<div class="row"><h4>${e(r.course)}<span>${e(r.sex)}${r.cat&&!r.cat.startsWith('普通')?'　'+e(r.cat.replace(/[【】]/g,'')):''}</span></h4>
+    <div class="kv2"><div><b>募集人員</b><span>${e(r.boshu)}</span></div><div><b>確定志願者</b><span>${e(r.kakutei)}</span></div><div class="big"><b>志願倍率</b><span>${rate(r.shigan)}</span></div>
+    <div><b>受検者</b><span>${e(r.jyuken)}</span></div><div><b>合格者</b><span>${e(r.goukaku)}</span></div><div class="big"><b>実質倍率</b><span>${rate(r.jissitsu)}</span></div></div></div>`).join('');
   const rows2=s.oubo.map(r=>`<tr><td>${e(r.course)}</td><td class="n">${e(r.teiin)}</td><td class="n">${e(r.tenpen)}</td><td class="n">${e(r.boshu)}</td><td class="n">${e(r.henkoumae)}</td><td class="n">${e(r.kakutei)}</td></tr>`).join('');
-  return `${H3('2026年度 入試応募状況')}<div class="tbl-wrap"><table><thead><tr><th>学科・コース</th><th class="n">入試募集人員</th><th class="n">確定志願者</th><th class="n">志願倍率</th><th class="n">受検者</th><th class="n">合格者</th><th class="n">実質倍率</th></tr></thead><tbody>${rows}</tbody></table></div>
-  <p class="legend" style="margin-top:10px">倍率の色：<span class="rate r2">1.20以上</span>　<span class="rate r3">1.40以上</span>　「—」は原本の表記のまま。</p>
+  return `${H3('2026年度 入試応募状況')}<div class="ob">${rows}</div>
+  <p class="legend" style="margin-top:12px">倍率の色：<span class="rate r2">1.20以上</span>　<span class="rate r3">1.40以上</span>　「—」は原本の表記のまま。志願倍率＝確定志願者÷募集人員、実質倍率＝受検者÷合格者。</p>
   <details><summary>募集定員・転編入枠・変更前志願者数も見る</summary><div class="tbl-wrap" style="margin-top:8px"><table><thead><tr><th>学科</th><th class="n">募集定員</th><th class="n">転編入枠</th><th class="n">入試募集人員</th><th class="n">変更前志願者</th><th class="n">確定志願者</th></tr></thead><tbody>${rows2}</tbody></table></div></details>`;};
 R.senbatsu=s=>{const st=(x,label)=>`<div class="stage"><b>${label}（募集の${e(x.ratio)}%）</b>
   <div class="row"><span>選抜の種類</span><span class="${x.type==='特色'?'tk':'ky'}">${e(x.type)}</span></div>
@@ -259,7 +274,7 @@ R.senbatsu=s=>{const st=(x,label)=>`<div class="stage"><b>${label}（募集の${
   ${M.sen_legend.map(l=>`<p><b>${e(l.label)}</b>　${e(l.text).replace(/\n/g,'<br>')}</p>`).join('')}</div>`;};
 R.heigan=s=>{const h=s.heigan;const L=v=>typeof v==='string'?`<p class="tx" style="color:var(--muted);margin:0">${e(v)}</p>`:v.length?`<ol>${v.map(x=>`<li>${e(x)}</li>`).join('')}</ol>`:'<p class="tx" style="color:var(--muted);margin:0">記載なし</p>';
   return `${H3('私立高校の併願受験例')}<p class="intro">通学区：${e(h.area)}</p><div class="hg"><div><b>男子</b>${L(h.male)}</div><div><b>女子</b>${L(h.female)}</div></div><div class="note"><p>${e(M.heigan_intro)}</p>${M.heigan_notes.map(n=>`<p>${e(n)}</p>`).join('')}</div>`;};
-R.taiiku=s=>{const rows=s.taiiku.map(r=>`<tr><td>${e(r.sport)}</td><td>${e(r.sex)}</td><td class="n">${e(r.year)}</td><td><b>${e(r.pos)}</b>${r.team!==s.name&&!s.aliases.includes(r.team)?' <small>('+e(r.team)+')</small>':''}</td></tr>`).join('');
+R.taiiku=s=>{const rows=s.taiiku.map(r=>`<tr><td>${e(r.sport)}</td><td style="white-space:nowrap">${e(r.sex)}</td><td class="n">${e(r.year)}</td><td><b>${e(r.pos)}</b>${r.team!==s.name&&!s.aliases.includes(r.team)?' <small>('+e(r.team)+')</small>':''}</td></tr>`).join('');
   return `${H3('学校総合体育大会 県予選会（2023〜2025年度）')}<div class="tbl-wrap"><table><thead><tr><th>種目</th><th></th><th class="n">年度</th><th>結果</th></tr></thead><tbody>${rows}</tbody></table></div><div class="note">${M.taiiku_notes.map(n=>`<p>${e(n)}</p>`).join('')}<p>${e(M.taiiku_source)}</p></div>`;};
 R.kikoku=s=>{const k=s.kikoku;
   const rows=k.exams.map(x=>`<tr><td class="n">${e(x.date)}</td><td>${[x.kikoku?'帰国':'',x.suisen?'推薦':'',x.ippan?'一般':''].filter(Boolean).join('・')}${x.tokubetsu?'<br><small>特別措置あり</small>':''}</td><td>${e(x.subjects)}</td>${x.boshu!==undefined?`<td>${e(x.boshu)}</td>`:''}</tr>`).join('');
